@@ -1,0 +1,17 @@
+{
+  "name": "inventory-api",
+  "version": "1.0.0",
+  "description": "Inventory API for RAGE Multiplayer.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/root-cause/ragemp-inventory-api.git"
+  },
+  "author": "rootcause",
+  "bugs": {
+    "url": "https://github.com/root-cause/ragemp-inventory-api/issues"
+  },
+  "homepage": "https://github.com/root-cause/ragemp-inventory-api#readme",
+  "dependencies": {
+    "lodash.isequal": "^4.5.0"
+  }
+}
