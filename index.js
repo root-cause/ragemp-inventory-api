@@ -12,11 +12,13 @@ class InventoryScript extends EventEmitter {
      * @param {string} key         Item identifier, such as "item_medkit".
      * @param {string} name        Item name, such as "Medkit".
      * @param {string} description Item description, such as "Gives you 10 health".
-     * @param {function} [onUse]       Optional - Function that gets called when the item is used.
+     * @param {function} [onUse]   Optional - Function that gets called when the item is used.
+     * @param {function} [nameFunc] Optional - Function that gets called when getItemName() is used.
+     * @param {function} [descFunc] Optional - Function that gets called when getItemDescription() is used.
      * @return {object} The added item, will be null if there are any mistakes.
      * @fires itemDefined
      */
-    addItem(key, name, description, onUse) {
+    addItem(key, name, description, onUse, nameFunc, descFunc) {
         if (typeof key !== "string" || key.length < 1) {
             console.error("addItem: Key was not a string/was an empty string.");
             return null;
@@ -34,7 +36,9 @@ class InventoryScript extends EventEmitter {
         this._items[key] = {
             name: name,
             description: description,
-            onUse: onUse
+            onUse: onUse,
+            nameFunc: nameFunc,
+            descFunc: descFunc
         };
 
         this.emit("itemDefined", key, name, description);
@@ -70,19 +74,21 @@ class InventoryScript extends EventEmitter {
     /**
      * Returns the human readable name of the specified item.
      * @param  {string} key Item identifier, such as "item_medkit".
+     * @param  {string} [data] Optional - An object that has item attributes.
      * @return {string}     Human readable item name.
      */
-    getItemName(key) {
-        return this.hasItem(key) ? this._items[key].name : "Invalid Item";
+    getItemName(key, data) {
+        return this.hasItem(key) ? (typeof this._items[key].nameFunc === "function" ? this._items[key].nameFunc(data) : this._items[key].name) : "Invalid Item";
     }
 
     /**
      * Returns the description of the specified item.
      * @param  {string} key Item identifier, such as "item_medkit".
+     * @param  {string} [data] Optional - An object that has item attributes.
      * @return {string}     Item's description.
      */
-    getItemDescription(key) {
-        return this.hasItem(key) ? this._items[key].description : "";
+    getItemDescription(key, data) {
+        return this.hasItem(key) ? (typeof this._items[key].descFunc === "function" ? this._items[key].descFunc(data) : this._items[key].description) : "";
     }
 }
 
